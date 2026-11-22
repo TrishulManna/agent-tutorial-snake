@@ -1,0 +1,8 @@
+{
+  "name": "copper-snake",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "npm run build && node --test tests/game.test.cjs"
+  }
+}

@@ -1,0 +1,59 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #171513;
+  color: #f7e5d0;
+}
+
+main {
+  max-width: 26rem;
+  margin: 8vh auto;
+  padding: 0 1rem;
+}
+
+#board {
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(var(--size), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--size), minmax(0, 1fr));
+  aspect-ratio: 1;
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid #b77a53;
+  border-radius: 6px;
+  background: #4a3528;
+}
+
+#board:focus-visible {
+  outline: 2px solid #ffc391;
+  outline-offset: 4px;
+}
+
+.cell {
+  background: #2a211b;
+}
+
+.segment {
+  /* Anchor each segment to the top-left square. A step spans one square and one gap. */
+  position: absolute;
+  grid-area: 1 / 1 / 2 / 2;
+  inset: 0;
+  transform: translate(
+    calc(var(--x) * (100% + 2px)),
+    calc(var(--y) * (100% + 2px))
+  );
+  transition: transform var(--slide-time) linear;
+  pointer-events: none;
+  background: #ffad70;
+  border-radius: 25%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    transition: none;
+  }
+}
+
+.food {
+  background: radial-gradient(circle, #beeb93 0 23%, transparent 25%), #2a211b;
+}

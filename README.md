@@ -2,7 +2,7 @@
 
 ## Build and check
 
-Run these from the project folder with Node, npm, and the TypeScript compiler (`tsc`) available.
+From the project folder, run `npm ci` with Node.js 22 and npm to install the pinned TypeScript compiler.
 
 - `npm run build` compiles `game.ts` into `dist/game.js`.
 - `npm test` rebuilds the game and checks food placement, growth, wall and body collisions, direct reversals, queued turns, and **Play again**.
@@ -15,3 +15,10 @@ Run these from the project folder with Node, npm, and the TypeScript compiler (`
 4. Select **Play again** and quickly press **W**, then **Left Arrow**. Check that the score starts at zero and the snake moves up before continuing left.
 
 The rule tests advance the clock one tick at a time and use predictable food placement. The browser check exercises the real page and keyboard. Play a longer run to judge whether the glide and turn timing feel right.
+
+
+## Deployment
+
+A push to `main` runs [the Pages workflow](.github/workflows/pages.yml). The verification job installs the locked dependencies and runs `npm test`, which also builds the game. A separate deploy job publishes the browser files only after verification succeeds.
+
+To demonstrate the gate, manually run the workflow with **Simulate a failed check** enabled. The verification job fails deliberately and the deployment job is skipped.

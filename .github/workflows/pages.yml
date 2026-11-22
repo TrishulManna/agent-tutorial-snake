@@ -1,0 +1,58 @@
+name: Build and deploy Copper Snake
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      demonstrate_failure:
+        description: Simulate a failed check to demonstrate the deployment gate
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: copper-snake-pages
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm test
+      - name: Demonstrate a failed check
+        if: inputs.demonstrate_failure
+        run: |
+          echo "Intentional failure for Lesson 5."
+          exit 1
+      - name: Stage browser files
+        run: |
+          mkdir -p _site/dist
+          cp index.html style.css _site/
+          cp dist/game.js _site/dist/
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    # A failed verification job skips deployment and leaves the last release live.
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
